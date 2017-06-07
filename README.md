@@ -13,10 +13,15 @@
 Requires [Node](https://nodejs.org/en/) version 6 or above.
 
 ```sh
-npm install --save focha
+npm install --save-dev focha
 ```
 
 ## Use
+
+## Related
+
+* [rocha](https://github.com/bahmutov/rocha) - randomizes tests in Mocha
+  to find inter-test dependencies
 
 ### Small print
 
