@@ -60,7 +60,9 @@
     "size": "t=\"$(npm pack .)\"; wc -c \"${t}\"; tar tvf \"${t}\"; rm \"${t}\";",
     "test": "npm run unit",
     "unit": "mocha src/*-spec.js",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
+    "demo-mocha": "mocha test/spec.js",
+    "demo-focha": "bin/focha.js test/spec.js"
   },
   "devDependencies": {
     "ban-sensitive-files": "1.9.0",
