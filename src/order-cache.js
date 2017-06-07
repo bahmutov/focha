@@ -10,7 +10,7 @@ const read = require('fs').readFileSync
 function saveOrder (ordered) {
   la(is.array(ordered), 'expected a list of suites', ordered)
 
-  const json = JSON.stringify(ordered, null, 2)
+  const json = JSON.stringify(ordered, null, 2) + '\n\n'
   const save = require('fs').writeFileSync
   save(filename, json)
   log('saved order to file', filename)
