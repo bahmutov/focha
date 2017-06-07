@@ -1,6 +1,7 @@
 # focha
 
 > Mocha wrapper that runs previously failed tests first
+> **F**ailing m**ocha** = Focha
 
 [![NPM][npm-icon] ][npm-url]
 
@@ -17,6 +18,10 @@ npm install --save-dev focha
 ```
 
 ## Use
+
+## Debug
+
+Run with `DEBUG=focha` environment variable
 
 ## Related
 
