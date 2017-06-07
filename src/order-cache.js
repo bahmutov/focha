@@ -7,13 +7,13 @@ const exists = require('fs').existsSync
 const rm = require('fs').unlinkSync
 const read = require('fs').readFileSync
 
-function saveOrder (ordered) {
-  la(is.array(ordered), 'expected a list of suites', ordered)
+function saveFailedTests (tests) {
+  la(is.array(tests), 'expected a list of suites', tests)
 
-  const json = JSON.stringify(ordered, null, 2) + '\n\n'
+  const json = JSON.stringify(tests, null, 2) + '\n\n'
   const save = require('fs').writeFileSync
   save(filename, json)
-  log('saved order to file', filename)
+  log('saved failed tests to file', filename)
   return filename
 }
 
@@ -36,7 +36,7 @@ function loadOrder () {
 }
 
 module.exports = {
-  save: saveOrder,
+  save: saveFailedTests,
   clear: clearSavedOrder,
   load: loadOrder,
   filename: function () {

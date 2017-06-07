@@ -62,7 +62,7 @@
     "unit": "mocha src/*-spec.js",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "demo-mocha": "mocha test/spec.js",
-    "demo-focha": "bin/focha.js test/spec.js"
+    "demo-focha": "node bin/focha.js test/spec.js"
   },
   "devDependencies": {
     "ban-sensitive-files": "1.9.0",

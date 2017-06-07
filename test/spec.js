@@ -7,7 +7,11 @@ const fails = () => {
   throw new Error('no')
 }
 
-it('A', passes)
-it('B', passes)
-it('C', passes)
-it('D', fails)
+describe('outer', () => {
+  describe('inner', () => {
+    it('A', passes)
+    it('B', passes)
+    it('C', passes)
+    it('D', fails)
+  })
+})

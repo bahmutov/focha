@@ -27,6 +27,8 @@ function focha (options) {
     specFilenames = [specFilenames]
   }
 
+  const failedTests = []
+
   specFilenames.forEach(mocha.addFile.bind(mocha))
 
   mocha.suite.beforeAll(function () {
@@ -44,21 +46,45 @@ function focha (options) {
     // the order might be out of date if any tests
     // were added or deleted, thus
     // always collect the order
-    const testNames = order.collect(mocha.suite)
-    cache.save(testNames)
+    // const testNames = order.collect(mocha.suite)
+    // cache.save(testNames)
   })
 
-  mocha.run(function (failures) {
+  const runner = mocha.run(function (failures) {
     process.on('exit', function () {
       if (failures === 0) {
         cache.clear()
       } else {
-        const filename = cache.filename()
-        la(is.unemptyString(filename), 'missing save filename')
-        console.error('Failed tests order saved in', chalk.yellow(filename))
-        console.error('If you run Focha again, the same failed test order will be used')
+        if (is.not.empty(failedTests)) {
+          console.log('%d failed tests', failedTests.length)
+          console.log(failedTests)
+          const filename = cache.filename()
+          la(is.unemptyString(filename), 'missing save filename')
+          cache.save(failedTests)
+          console.error('Failed tests order saved in', chalk.yellow(filename))
+          console.error('If you run Focha again, failed tests will run first')
+        } else {
+          console.error('Problem: Mocha has finished with an error')
+          console.error('but we have no failed tests recorded! 🐞')
+        }
       }
       process.exit(failures)
+    })
+  })
+
+  runner.on('fail', function (test, err) {
+    let parent = test.parent
+    // from top describe to describe containing the test
+    let location = []
+    while (parent) {
+      location.push(parent.title)
+      parent = parent.parent
+    }
+    location = location.reverse()
+
+    failedTests.push({
+      name: test.title,
+      location
     })
   })
 }
