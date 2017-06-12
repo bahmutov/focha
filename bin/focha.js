@@ -2,6 +2,7 @@
 
 'use strict'
 
+const minimist = require('minimist')
 const join = require('path').join
 
 const help = [
@@ -18,6 +19,12 @@ require('simple-bin-help')({
 
 // console.log(process.argv)
 
-const spec = process.argv.slice(2)
+const argv = minimist(process.argv.slice(2), {
+  boolean: ['all']
+})
+const spec = argv._
 const focha = require('..')
-focha({ spec: spec })
+focha({
+  all: argv.all,
+  spec: spec
+})

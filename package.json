@@ -54,7 +54,7 @@
     "deps": "deps-ok && dependency-check .",
     "issues": "git-issues",
     "license": "license-checker --production --onlyunknown --csv",
-    "lint": "standard --verbose --fix src/*.js",
+    "lint": "standard --verbose --fix bin/*.js src/*.js",
     "pretest": "npm run lint",
     "secure": "nsp check",
     "size": "t=\"$(npm pack .)\"; wc -c \"${t}\"; tar tvf \"${t}\"; rm \"${t}\";",
@@ -62,7 +62,8 @@
     "unit": "mocha src/*-spec.js",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "demo-mocha": "mocha test/spec.js",
-    "demo-focha": "node bin/focha.js test/spec.js"
+    "demo-focha": "node bin/focha.js test/spec.js",
+    "ci": "node bin/focha.js test/spec.js && node bin/focha.js --all test/spec.js"
   },
   "devDependencies": {
     "ban-sensitive-files": "1.9.0",
@@ -83,6 +84,8 @@
     "debug": "2.6.8",
     "lazy-ass": "1.6.0",
     "lodash": "4.17.4",
+    "minimist": "1.2.0",
+    "pluralize": "5.0.0",
     "ramda": "0.24.1",
     "ramda-fantasy": "0.8.0",
     "simple-bin-help": "1.7.0"

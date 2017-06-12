@@ -6,6 +6,9 @@ const log = require('debug')('focha')
 const la = require('lazy-ass')
 const is = require('check-more-types')
 const chalk = require('chalk')
+const {Maybe} = require('ramda-fantasy')
+const {prop} = require('ramda')
+const pluralize = require('pluralize')
 
 const order = require('./order-of-tests')
 const cache = require('./order-cache')
@@ -27,34 +30,50 @@ function focha (options) {
     specFilenames = [specFilenames]
   }
 
+  const prevFailingTests = options.all ? undefined : cache.load()
+  if (!prevFailingTests && !options.all) {
+    console.log('😃 no previously failing tests found')
+    console.log('run all tests using --all flag')
+    return
+  }
+
   const failedTests = []
 
   specFilenames.forEach(mocha.addFile.bind(mocha))
 
-  mocha.suite.beforeAll(function () {
-    const failedLastTime = cache.load()
-    if (failedLastTime) {
-      log('leaving only failed tests from last run')
-      order.leave(failedLastTime)(mocha.suite)
-    } else {
-      log('running all tests')
-      // const randomOrder = order.shuffle(mocha.suite)
-      // const names = order.collect(randomOrder)
-      // e2e('shuffled names:')
-      // e2e('%j', names)
-    }
+  const wasRunningJustFailingTests = () =>
+    Maybe.toMaybe(is.unemptyArray(prevFailingTests)
+      ? prevFailingTests : undefined)
+  const numberOfPreviouslyFailingTests = () =>
+    wasRunningJustFailingTests().map(prop('length'))
 
-    // the order might be out of date if any tests
-    // were added or deleted, thus
-    // always collect the order
-    // const testNames = order.collect(mocha.suite)
-    // cache.save(testNames)
-  })
+  if (prevFailingTests) {
+    mocha.suite.beforeAll(function () {
+      la(prevFailingTests, 'missing failing tests')
+      log('leaving only failed tests from last run')
+      order.leave(prevFailingTests)(mocha.suite)
+
+      // the order might be out of date if any tests
+      // were added or deleted, thus
+      // always collect the order
+      // const testNames = order.collect(mocha.suite)
+      // cache.save(testNames)
+    })
+  }
 
   const runner = mocha.run(function (failures) {
+    // console.log('mocha run finished')
+    // why do we register process.on('exit') here and not
+    // control the exit ourselves?
     process.on('exit', function () {
       if (failures === 0) {
+        log('there were no failures in this run')
         cache.clear()
+        numberOfPreviouslyFailingTests()
+          .map(n => {
+            console.log('🤔 previously %s failed', pluralize('test', n, true))
+            console.log('✅ now everything is fine')
+          })
       } else {
         if (is.not.empty(failedTests)) {
           console.log('%d failed tests', failedTests.length)
@@ -74,20 +93,12 @@ function focha (options) {
   })
 
   runner.on('fail', function (test, err) {
-    let parent = test.parent
-    // from top describe to describe containing the test
-    let location = []
-    while (parent) {
-      location.push(parent.title)
-      parent = parent.parent
-    }
-    location = location.reverse()
-
-    failedTests.push({
+    const failed = {
       title: test.title,
-      fullTitle: test.fullTitle(),
-      location
-    })
+      fullTitle: test.fullTitle()
+    }
+    log('failed test "%s"', failed.fullTitle)
+    failedTests.push(failed)
   })
 }
 

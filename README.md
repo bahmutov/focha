@@ -19,6 +19,22 @@ npm install --save-dev focha
 
 ## Use
 
+Avoid running all tests just to check if previously failed tests are fixed.
+If tests fail, `focha` saves file `.focha.json`. On the next run, `focha` will
+only run tests listed in this file. Thus the best strategy is to let `focha`
+run failing tests and then, if it succeeds let it run all the tests.
+
+You can do this by running it twice. From your CI file execute the second
+command using `&&` and pass `--all` flag to run all the tests.
+
+```sh
+$(npm bin)/focha src/*-spec.js && $(npm bin)/focha --all src/*-spec.js
+```
+
+If the first command finds nothing, or failing tests pass, the second command
+will run all the tests. If the failing tests are still failing, the second
+command will not execute.
+
 ## Debug
 
 Run with `DEBUG=focha` environment variable
