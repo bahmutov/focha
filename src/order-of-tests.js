@@ -107,8 +107,20 @@ function setOrder (suite, order) {
   suite.suites.forEach(s => setOrder(s, order))
 }
 
+const leaveTests = (tests) => (suite) => {
+  log('leaving only %d tests', tests.length)
+
+  const findByFullTitle = t => _.find(tests, {fullTitle: t.fullTitle()})
+
+  suite.tests = suite.tests.filter(findByFullTitle)
+  suite.suites.forEach(leaveTests(tests))
+
+  return suite
+}
+
 module.exports = {
   shuffle,
   set: setOrder,
+  leave: leaveTests,
   collect: collectTestOrder
 }

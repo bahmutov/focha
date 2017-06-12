@@ -2,7 +2,7 @@ const Mocha = require('mocha')
 const mocha = new Mocha()
 const log = require('debug')('focha')
 // verbose output during e2e tests
-const e2e = require('debug')('focha:e2e')
+// const e2e = require('debug')('focha:e2e')
 const la = require('lazy-ass')
 const is = require('check-more-types')
 const chalk = require('chalk')
@@ -32,15 +32,16 @@ function focha (options) {
   specFilenames.forEach(mocha.addFile.bind(mocha))
 
   mocha.suite.beforeAll(function () {
-    const cachedOrder = cache.load()
-    if (cachedOrder) {
-      log('reordering specs like last time')
-      order.set(mocha.suite, cachedOrder)
+    const failedLastTime = cache.load()
+    if (failedLastTime) {
+      log('leaving only failed tests from last run')
+      order.leave(failedLastTime)(mocha.suite)
     } else {
-      const randomOrder = order.shuffle(mocha.suite)
-      const names = order.collect(randomOrder)
-      e2e('shuffled names:')
-      e2e('%j', names)
+      log('running all tests')
+      // const randomOrder = order.shuffle(mocha.suite)
+      // const names = order.collect(randomOrder)
+      // e2e('shuffled names:')
+      // e2e('%j', names)
     }
 
     // the order might be out of date if any tests
@@ -83,7 +84,8 @@ function focha (options) {
     location = location.reverse()
 
     failedTests.push({
-      name: test.title,
+      title: test.title,
+      fullTitle: test.fullTitle(),
       location
     })
   })
