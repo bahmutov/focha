@@ -4,6 +4,9 @@
   "version": "0.0.0-development",
   "author": "Gleb Bahmutov <gleb.bahmutov@gmail.com>",
   "bugs": "https://github.com/bahmutov/focha/issues",
+  "bin": {
+    "focha": "bin/focha.js"
+  },
   "config": {
     "pre-git": {
       "commit-msg": "simple",
