@@ -14,6 +14,9 @@ const order = require('./order-of-tests')
 const cache = require('./order-cache')
 la(is.object(cache), 'missing test order object')
 
+const {join} = require('path')
+const pkg = require(join(__dirname, '../package.json'))
+
 function focha (options) {
   options = options || {}
 
@@ -33,7 +36,7 @@ function focha (options) {
   const prevFailingTests = options.all ? undefined : cache.load()
   if (!prevFailingTests && !options.all) {
     console.log('😃 no previously failing tests found')
-    console.log('run all tests using --all flag')
+    console.log('ℹ️ run all tests using --all flag')
     return
   }
 
@@ -80,7 +83,7 @@ function focha (options) {
           console.log(failedTests)
           const filename = cache.filename()
           la(is.unemptyString(filename), 'missing save filename')
-          cache.save(failedTests)
+          cache.save({tests: failedTests, version: pkg.version})
           console.error('Failed tests order saved in', chalk.yellow(filename))
           console.error('If you run Focha again, failed tests will run first')
         } else {
