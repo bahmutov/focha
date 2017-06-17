@@ -3,18 +3,29 @@ const log = require('debug')('focha')
 const la = require('lazy-ass')
 const is = require('check-more-types')
 const join = require('path').join
-const filename = join(process.cwd(), '.focha.json')
-const exists = require('fs').existsSync
-const rm = require('fs').unlinkSync
-const read = require('fs').readFileSync
+const {
+  existsSync: exists,
+  unlinkSync: rm,
+  readFileSync: read,
+  writeFileSync: write,
+  mkdirSync: md
+ } = require('fs')
+
+const saveFolder = join(process.cwd(), '.focha')
+
+const filename = join(saveFolder, '.focha.json')
 
 const stringify = what => JSON.stringify(what, null, 2) + '\n\n'
 
 function saveFailedTests ({tests, version}) {
   la(is.array(tests), 'expected a list of suites', tests)
   const json = stringify({tests, version})
-  const save = require('fs').writeFileSync
-  save(filename, json)
+
+  if (!exists(saveFolder)) {
+    log('created output folder %s', saveFolder)
+    md(saveFolder)
+  }
+  write(filename, json, 'utf8')
   log('saved failed tests to file', filename)
   return filename
 }
