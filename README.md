@@ -48,6 +48,16 @@ command will not execute.
 
 Run with `DEBUG=focha` environment variable
 
+## Example
+
+See example project [focha-test](https://github.com/bahmutov/focha-test) with its test history
+
+* [.travis.yml](https://github.com/bahmutov/focha-test/blob/master/.travis.yml) shows how tests are setup
+* [TravisCI build history](https://travis-ci.org/bahmutov/focha-test/builds) where you can see 
+  - a failing test run [#4](https://travis-ci.org/bahmutov/focha-test/builds/244777337)
+  - the next run [#5](https://travis-ci.org/bahmutov/focha-test/builds/244784772) just executes the single failing test first
+  - the run [#6](https://travis-ci.org/bahmutov/focha-test/builds/244786471) has the problem fixed and runs failing test and then all tests
+
 ## Related
 
 * [rocha](https://github.com/bahmutov/rocha) - randomizes tests in Mocha
