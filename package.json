@@ -25,6 +25,12 @@
       ],
       "post-commit": [],
       "post-merge": []
+    },
+    "next-update": {
+      "commands": {
+        "dependency-check": "npm run deps",
+        "deps-ok": "npm run deps"
+      }
     }
   },
   "engines": {
