@@ -51,10 +51,20 @@ function loadOrder () {
   return order.tests
 }
 
+function recordTests ({tests, version}) {
+  if (is.empty(tests.length)) {
+    clearSavedOrder()
+  } else {
+    saveFailedTests({tests, version})
+  }
+  return Promise.resolve()
+}
+
 module.exports = {
   save: saveFailedTests,
   clear: clearSavedOrder,
   load: loadOrder,
+  record: recordTests,
   filename: function () {
     return filename
   }

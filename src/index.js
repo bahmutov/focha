@@ -20,8 +20,7 @@ const pkg = require(join(__dirname, '../package.json'))
 function focha (options) {
   options = options || {}
 
-  log('starting focha with options')
-  log(JSON.stringify(options, null, 2))
+  log('starting focha with options %j', options)
 
   var specFilenames = options.spec
   if (!specFilenames) {
@@ -64,33 +63,41 @@ function focha (options) {
     })
   }
 
-  const runner = mocha.run(function (failures) {
-    // console.log('mocha run finished')
-    // why do we register process.on('exit') here and not
-    // control the exit ourselves?
-    process.on('exit', function () {
-      if (failures === 0) {
-        log('there were no failures in this run')
-        cache.clear()
-        numberOfPreviouslyFailingTests()
+  function printFinishedMessage (failures) {
+    if (failures === 0) {
+      log('there were no failures in this run')
+      cache.clear()
+      numberOfPreviouslyFailingTests()
           .map(n => {
             console.log('🤔 previously %s failed', pluralize('test', n, true))
             console.log('✅ now everything is fine')
           })
+    } else {
+      if (is.not.empty(failedTests)) {
+        console.log('%d failed tests', failedTests.length)
+        console.log(failedTests)
+        const filename = cache.filename()
+        la(is.unemptyString(filename), 'missing save filename')
+        cache.save({tests: failedTests, version: pkg.version})
+        console.error('Failed tests order saved in', chalk.yellow(filename))
+        console.error('If you run Focha again, failed tests will run first')
       } else {
-        if (is.not.empty(failedTests)) {
-          console.log('%d failed tests', failedTests.length)
-          console.log(failedTests)
-          const filename = cache.filename()
-          la(is.unemptyString(filename), 'missing save filename')
-          cache.save({tests: failedTests, version: pkg.version})
-          console.error('Failed tests order saved in', chalk.yellow(filename))
-          console.error('If you run Focha again, failed tests will run first')
-        } else {
-          console.error('Problem: Mocha has finished with an error')
-          console.error('but we have no failed tests recorded! 🐞')
-        }
+        console.error('Problem: Mocha has finished with an error')
+        console.error('but we have no failed tests recorded! 🐞')
       }
+    }
+  }
+
+  const runner = mocha.run(function mochaRan (failures) {
+    log('mocha run finished with %s', pluralize('failure', failures, true))
+
+    la(failedTests.length === failures, 'wrong number of failures',
+      failures, 'but we only have', failedTests.length, 'failed tests')
+    cache.record({
+      tests: failedTests,
+      version: pkg.version
+    }).then(function () {
+      printFinishedMessage(failures)
       process.exit(failures)
     })
   })
