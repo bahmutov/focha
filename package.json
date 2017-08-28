@@ -92,6 +92,7 @@
     "chalk": "2.1.0",
     "check-more-types": "2.24.0",
     "debug": "3.0.1",
+    "got": "7.1.0",
     "lazy-ass": "1.6.0",
     "lodash": "4.17.4",
     "minimist": "1.2.0",
@@ -99,7 +100,8 @@
     "pluralize": "7.0.0",
     "ramda": "0.24.1",
     "ramda-fantasy": "0.8.0",
-    "simple-bin-help": "1.7.0"
+    "simple-bin-help": "1.7.0",
+    "urlconcat": "0.0.12"
   },
   "release": {
     "analyzeCommits": "simple-commit-message",

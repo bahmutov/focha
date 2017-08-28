@@ -3,6 +3,7 @@ const log = require('debug')('focha')
 const la = require('lazy-ass')
 const is = require('check-more-types')
 const join = require('path').join
+const chalk = require('chalk')
 const {
   existsSync: exists,
   unlinkSync: rm,
@@ -27,6 +28,8 @@ function saveFailedTests ({tests, version}) {
   }
   write(filename, json, 'utf8')
   log('saved failed tests to file', filename)
+  console.error('Failed tests order saved in', chalk.yellow(filename))
+
   return filename
 }
 
@@ -40,7 +43,7 @@ function clearSavedOrder () {
 
 function loadOrder () {
   if (!exists(filename)) {
-    return
+    return Promise.resolve([])
   }
   const json = read(filename, 'utf8')
   const order = JSON.parse(json)
@@ -48,13 +51,23 @@ function loadOrder () {
   if (order.version) {
     log('filed was saved using version %s', order.version)
   }
-  return order.tests
+  return Promise.resolve(order.tests)
+}
+
+function recordTests ({tests, version}) {
+  if (is.empty(tests.length)) {
+    clearSavedOrder()
+  } else {
+    saveFailedTests({tests, version})
+  }
+  return Promise.resolve()
 }
 
 module.exports = {
   save: saveFailedTests,
   clear: clearSavedOrder,
   load: loadOrder,
+  record: recordTests,
   filename: function () {
     return filename
   }
