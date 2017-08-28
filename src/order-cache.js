@@ -3,6 +3,7 @@ const log = require('debug')('focha')
 const la = require('lazy-ass')
 const is = require('check-more-types')
 const join = require('path').join
+const chalk = require('chalk')
 const {
   existsSync: exists,
   unlinkSync: rm,
@@ -27,6 +28,8 @@ function saveFailedTests ({tests, version}) {
   }
   write(filename, json, 'utf8')
   log('saved failed tests to file', filename)
+  console.error('Failed tests order saved in', chalk.yellow(filename))
+
   return filename
 }
 

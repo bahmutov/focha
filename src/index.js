@@ -66,7 +66,6 @@ function focha (options) {
   function printFinishedMessage (failures) {
     if (failures === 0) {
       log('there were no failures in this run')
-      cache.clear()
       numberOfPreviouslyFailingTests()
           .map(n => {
             console.log('🤔 previously %s failed', pluralize('test', n, true))
@@ -76,10 +75,6 @@ function focha (options) {
       if (is.not.empty(failedTests)) {
         console.log('%d failed tests', failedTests.length)
         console.log(failedTests)
-        const filename = cache.filename()
-        la(is.unemptyString(filename), 'missing save filename')
-        cache.save({tests: failedTests, version: pkg.version})
-        console.error('Failed tests order saved in', chalk.yellow(filename))
         console.error('If you run Focha again, failed tests will run first')
       } else {
         console.error('Problem: Mocha has finished with an error')
