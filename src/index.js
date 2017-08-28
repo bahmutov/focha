@@ -101,7 +101,7 @@ function focha (options) {
       }
     }
 
-    const runner = mocha.run(function mochaRan (failures) {
+    function mochaFinished (failures) {
       log('mocha run finished with %s', pluralize('failure', failures, true))
 
       la(failedTests.length === failures, 'wrong number of failures',
@@ -113,7 +113,9 @@ function focha (options) {
         printFinishedMessage(failures)
         process.exit(failures)
       })
-    })
+    }
+
+    const runner = mocha.run(mochaFinished)
 
     runner.on('fail', function (test, err) {
       const failed = {
