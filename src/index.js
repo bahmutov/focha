@@ -10,10 +10,23 @@ const {prop} = require('ramda')
 const pluralize = require('pluralize')
 
 const order = require('./order-of-tests')
-const cache = process.env.SERVER
+
+// Cache determines where failed test information is stored
+// could be local file or external service
+let cache
+
+if (process.env.SERVER) {
   // load / save to service url
-  ? require('./service-cache')(process.env.SERVER, 'test api key', 'test project', 'test run')
-  : require('./order-cache') // load / save to local file
+  const apiKey = process.env.API_KEY
+  la(apiKey, 'invalid API_KEY')
+  const projectName = 'test project'
+  const runId = 'latest' // could be branch name?
+  cache = require('./service-cache')(process.env.SERVER,
+    apiKey, projectName, runId)
+} else {
+  // load / save to local file
+  cache = require('./order-cache')
+}
 la(is.object(cache), 'missing test order object')
 
 const {join} = require('path')
