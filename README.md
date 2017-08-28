@@ -51,6 +51,11 @@ Instead of local JSON file, `focha` can save and load failed tests in a REST API
 just pass the end point via `SERVER` variable. Example service implementation
 [bahmutov/test-results-server](https://github.com/bahmutov/test-results-server).
 
+### configuration
+
+* `SERVER` url of the remote server that receives and returns failed tests
+* `API_KEY` for this client on the server
+
 ## Debug
 
 Run with `DEBUG=focha` environment variable
