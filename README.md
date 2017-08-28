@@ -45,6 +45,12 @@ If the first command finds nothing, or failing tests pass, the second command
 will run all the tests. If the failing tests are still failing, the second
 command will not execute.
 
+## Service
+
+Instead of local JSON file, `focha` can save and load failed tests in a REST API,
+just pass the end point via `SERVER` variable. Example service implementation
+[bahmutov/test-results-server](https://github.com/bahmutov/test-results-server).
+
 ## Debug
 
 Run with `DEBUG=focha` environment variable

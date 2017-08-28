@@ -43,7 +43,7 @@ function clearSavedOrder () {
 
 function loadOrder () {
   if (!exists(filename)) {
-    return
+    return Promise.resolve([])
   }
   const json = read(filename, 'utf8')
   const order = JSON.parse(json)
@@ -51,7 +51,7 @@ function loadOrder () {
   if (order.version) {
     log('filed was saved using version %s', order.version)
   }
-  return order.tests
+  return Promise.resolve(order.tests)
 }
 
 function recordTests ({tests, version}) {

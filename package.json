@@ -100,7 +100,8 @@
     "pluralize": "7.0.0",
     "ramda": "0.24.1",
     "ramda-fantasy": "0.8.0",
-    "simple-bin-help": "1.7.0"
+    "simple-bin-help": "1.7.0",
+    "urlconcat": "0.0.12"
   },
   "release": {
     "analyzeCommits": "simple-commit-message",
