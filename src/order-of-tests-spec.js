@@ -2,7 +2,7 @@ const la = require('lazy-ass')
 const is = require('check-more-types')
 const _ = require('lodash')
 const {set, shuffle} = require('./order-of-tests')
-const snapshot = require('snap-shot')
+const snapshot = require('snap-shot-it')
 const R = require('ramda')
 
 /* global describe, it */
