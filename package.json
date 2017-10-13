@@ -84,7 +84,7 @@
     "license-checker": "13.1.0",
     "nsp": "2.8.1",
     "pre-git": "3.15.3",
-    "semantic-release": "8.1.0",
+    "semantic-release": "8.2.0",
     "snap-shot-it": "2.2.0",
     "standard": "10.0.3"
   },
@@ -98,7 +98,7 @@
     "minimist": "1.2.0",
     "mocha": "3.5.3",
     "pluralize": "7.0.0",
-    "ramda": "0.24.1",
+    "ramda": "0.25.0",
     "ramda-fantasy": "0.8.0",
     "simple-bin-help": "1.7.0",
     "urlconcat": "0.0.12"
